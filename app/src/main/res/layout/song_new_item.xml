@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="4dp">
+    <ImageView
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:id="@+id/gv_song_new_item_image"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gv_song_new_item_text"
+        android:layout_gravity="center"
+        android:text="gv_test"
+        android:layout_below="@+id/gv_song_new_item_image"
+        android:textSize="14sp"
+        android:layout_marginTop="3dp"/>
+</LinearLayout>

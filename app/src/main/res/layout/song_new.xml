@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/gv_song_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        style="@style/MyMediaBlueTitle"
+        />
+    <GridView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gv_song_new"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="5dp"
+        android:columnWidth="100dp"
+        android:stretchMode="columnWidth"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"></GridView>
+
+    <!--android:numColumns="auto_fit" ，GridView的列数设置为自动
+    android:columnWidth="90dp"，每列的宽度，也就是Item的宽度
+    android:stretchMode="columnWidth"，缩放与列宽大小同步
+    android:verticalSpacing="10dp"，两行之间的边距
+    android:horizontalSpacing="10dp"，两列之间的边距-->
+</LinearLayout>

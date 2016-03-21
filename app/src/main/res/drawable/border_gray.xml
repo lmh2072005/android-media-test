@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <!-- 红色背景 -->
+            <item>
+                <color android:color="#d2d2d2" />
+            </item>
+            <item android:bottom="0.5dp" android:drawable="@android:color/white"></item>
+        </layer-list>
+    </item>
+</selector>
