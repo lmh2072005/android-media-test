@@ -16,6 +16,7 @@ import java.io.IOException;
 public class MediaService extends Service implements Runnable {
     public MediaPlayer myMediaPlayer;
     public static boolean isrunning = true;
+    private boolean isPlaying = false;
     //当前播放的索引号
     private int curIndex = 0;
     //音乐地址
@@ -62,6 +63,7 @@ public class MediaService extends Service implements Runnable {
                 }
             });
             new Thread(this).start();
+            isPlaying = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,6 +71,7 @@ public class MediaService extends Service implements Runnable {
 
     //下一首
     private void nextMusic(){
+        isPlaying = false;
         if (++curIndex >= myMusicList.length){
             curIndex = 0;
         }
@@ -77,6 +80,7 @@ public class MediaService extends Service implements Runnable {
 
     //上一首
     private void preMusic(){
+        isPlaying = false;
         if (--curIndex <0){
             curIndex = myMusicList.length - 1;
         }
@@ -87,12 +91,14 @@ public class MediaService extends Service implements Runnable {
     private void playFn(){
         if(startMusicInited){
             myMediaPlayer.start();
+            isPlaying = true;
         }else{
             playMusic(myMusicList[curIndex]);
         }
     }
     //暂停
     private void stopFn(){
+        isPlaying = false;
         if(myMediaPlayer.isPlaying()){
             myMediaPlayer.pause();
         }
@@ -140,8 +146,10 @@ public class MediaService extends Service implements Runnable {
             myMediaPlayer.release();
             myMediaPlayer = null;
             isrunning = false;
+            isPlaying = false;
         }
     }
+
 
     @Override
     public void run() {
@@ -151,7 +159,7 @@ public class MediaService extends Service implements Runnable {
             }catch (Exception e) {
 
             }
-            if(myMediaPlayer!=null){
+            if(myMediaPlayer!=null && isPlaying){  //一定是isPlaying才发广播
                 int currentPosition = myMediaPlayer.getCurrentPosition();
                 int duration = myMediaPlayer.getDuration();
                 Intent intent = new Intent("com.myMediaBroadCast.seekbar");

@@ -43,6 +43,7 @@ public class MediaPlayActivity extends AppCompatActivity {
     private TextView seekBarMediaCurText;
     private TextView seekBarMediaMaxText;
     SeekBarReceiver receiver;
+    boolean seekbarTrackTouch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +192,6 @@ public class MediaPlayActivity extends AppCompatActivity {
         super.onBackPressed();
     }
     //拖动播放进度
-    boolean seekbarTrackTouch = false;
     class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
