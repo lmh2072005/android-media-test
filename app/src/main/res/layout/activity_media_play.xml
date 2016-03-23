@@ -105,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/seekBarMedia"
-            android:progressDrawable="@drawable/blue"
+            android:progressDrawable="@drawable/seekbar"
             android:maxHeight="2dp"
             android:layout_centerHorizontal="true"
             />
@@ -115,18 +115,23 @@
             android:layout_below="@id/seekBarMedia"
             android:layout_alignParentRight="true"
             android:id="@+id/seekBarMediaMaxText"
-            android:text="/voice"
-            android:layout_marginTop="3dp"
+            android:text="maxVoice"
             android:layout_marginRight="15dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/seekBarMedia"
+            android:id="@+id/seekBarMediaTextSplit"
+            android:text="/"
+            android:layout_toLeftOf="@id/seekBarMediaMaxText" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekBarMedia"
             android:id="@+id/seekBarMediaCurText"
-            android:text="voice"
-            android:layout_marginTop="3dp"
+            android:text="curVoice"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/seekBarMediaMaxText"/>
+            android:layout_toLeftOf="@id/seekBarMediaTextSplit"/>
 
     </RelativeLayout>
 

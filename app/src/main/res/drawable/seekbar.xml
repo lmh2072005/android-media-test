@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- seekbar背景 -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="#676768" />
+        </shape>
+    </item>
+    <!-- 第二进度条 比如视频缓冲区-->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <solid android:color="#ace3f7" />
+            </shape>
+        </clip>
+    </item>
+    <!-- 当前已播放的进度 -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <solid android:color="#04a8e3" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>  

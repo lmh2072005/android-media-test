@@ -89,6 +89,7 @@ public class MediaService extends Service implements Runnable {
 
     //播放
     private void playFn(){
+        isPlaying = false;
         if(startMusicInited){
             myMediaPlayer.start();
             isPlaying = true;
@@ -141,6 +142,7 @@ public class MediaService extends Service implements Runnable {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(receiver);
         if (myMediaPlayer != null) {
             myMediaPlayer.stop();
             myMediaPlayer.release();
@@ -159,12 +161,13 @@ public class MediaService extends Service implements Runnable {
             }catch (Exception e) {
 
             }
-            if(myMediaPlayer!=null && isPlaying){  //一定是isPlaying才发广播
-                int currentPosition = myMediaPlayer.getCurrentPosition();
-                int duration = myMediaPlayer.getDuration();
+            if(myMediaPlayer!=null && isPlaying){  //一定是isPlaying才发广播, 新开的线程
+                int currentPosition = myMediaPlayer.getCurrentPosition(); //当前播放毫秒
+                int duration = myMediaPlayer.getDuration(); //播放的总毫秒
                 Intent intent = new Intent("com.myMediaBroadCast.seekbar");
                 intent.putExtra("currentPosition", currentPosition);
                 intent.putExtra("duration", duration);
+                intent.putExtra("curIndex", curIndex);
                 sendBroadcast(intent);
             }
         }
@@ -173,7 +176,9 @@ public class MediaService extends Service implements Runnable {
     //接收前台拖放的进度，并调整歌曲的播放进度
     class SeekbarReceiver extends BroadcastReceiver{
         public void onReceive(Context context, Intent intent) {
-            int currentPosition = intent.getIntExtra("currentPosition", 0);
+            int currentPosition = intent.getIntExtra("currentPosition", 0); //当前刻度
+            //将播放进度条分成100份， 每份为:per(毫秒) = duration(持续总毫秒)/100,
+            //当前播放进度：per*currentPosition = duration(持续总毫秒)*currentPosition/100
             myMediaPlayer.seekTo(myMediaPlayer.getDuration()*currentPosition/100);
             myMediaPlayer.start();
         }

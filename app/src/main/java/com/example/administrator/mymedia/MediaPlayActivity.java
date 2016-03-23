@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,7 +52,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_media_play);
         btnBack = (ImageButton) findViewById(R.id.btn_back);
         songTitle = (TextView) findViewById(R.id.media_song_title);
-
+        System.out.println("activity created");
         //控制声音
         /*seekBarVoice = (SeekBar) findViewById(R.id.seekBarVoice);
         seekBarVoiceText = (TextView) findViewById(R.id.seekBarVoiceText);
@@ -138,8 +139,20 @@ public class MediaPlayActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        System.out.println("activity started");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         receiver = new SeekBarReceiver();
         this.registerReceiver(receiver, new IntentFilter("com.myMediaBroadCast.seekbar"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     private void setPlayingSongTitle(int index){
@@ -201,7 +214,7 @@ public class MediaPlayActivity extends AppCompatActivity {
         }
         public void onStopTrackingTouch(SeekBar seekBar) {
             seekbarTrackTouch = false;
-            int currentPosition = seekBar.getProgress();
+            int currentPosition = seekBar.getProgress();  //当前刻度
             Intent intent = new Intent("com.myMediaBroadCast.seekbarTo");
             intent.putExtra("currentPosition", currentPosition);
             sendBroadcast(intent);
@@ -211,12 +224,22 @@ public class MediaPlayActivity extends AppCompatActivity {
     class SeekBarReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int currentPosition = intent.getIntExtra("currentPosition", 0);
-            int duration = intent.getIntExtra("duration", 0);
-            System.out.println("activity收到一个广播：currentPosition="+currentPosition+" duration="+duration);
+            int curIndex = intent.getIntExtra("curIndex", 0); //当前播放歌曲索引
+            int currentPosition = intent.getIntExtra("currentPosition", 0);  //当前播放毫秒
+            int duration = intent.getIntExtra("duration", 0); //总毫秒
+            System.out.println("activity收到一个广播：currentPosition=" + currentPosition + " duration=" + duration);
+            SimpleDateFormat dataFormat = new SimpleDateFormat("mm:ss");  //毫秒转换成分秒
+            seekBarMediaMaxText.setText(dataFormat.format(duration));  //设置歌曲最大播放时间
             if(!seekbarTrackTouch){
-                seekBarMedia.setProgress(currentPosition*100/duration);
+                //将播放进度条分成100份， 每份为:per(毫秒) = duration(持续总毫秒)/100,
+                // 所以当前进度(刻度)为： graduation = currentPosition/per = currentPosition*100/duration;
+                //当前播放时间：currentPosition
+                seekBarMedia.setProgress(currentPosition * 100 / duration);  //设置时时进度条变化
                 seekBarMedia.invalidate();
+
+                seekBarMediaCurText.setText(dataFormat.format(currentPosition)); //设置时间变化
+                curPosition = curIndex; //当前索引号
+                setPlayingSongTitle(curIndex); //设置自带切换歌曲时标题变化
             }
         }
     }
