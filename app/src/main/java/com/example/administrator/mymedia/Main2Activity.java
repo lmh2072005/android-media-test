@@ -1,6 +1,11 @@
 package com.example.administrator.mymedia;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +28,8 @@ public class Main2Activity extends AppCompatActivity {
     ImageButton btnBack;
     ListView listView;
     ArrayList mediaList;
+    NetWrokReceiver myReceiver;
+    NetworkInfo activeInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +75,10 @@ public class Main2Activity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (activeInfo == null){
+                    Toast.makeText(Main2Activity.this, "请连接网络", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 ListView listView1 = (ListView) adapterView;  //包裹的listview
                 HashMap<String,String> map = (HashMap<String,String>) listView1.getItemAtPosition(position);  //当前项的值
                 String title = map.get("itemTitle");
@@ -86,6 +97,13 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        myReceiver = new NetWrokReceiver();
+        this.registerReceiver(myReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
@@ -97,5 +115,23 @@ public class Main2Activity extends AppCompatActivity {
             map.put("itemTitle", title);
             map.put("itemSinger", singer);
         }
+    }
+
+    public class NetWrokReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            //Toast.makeText(context, intent.getAction(), 1).show();
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            NetworkInfo wifiInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            activeInfo = manager.getActiveNetworkInfo(); //如果无网络连接activeInfo为null
+            if (activeInfo == null){
+                Toast.makeText(context, "请连接网络", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "mobileInfo:"+mobileInfo.isConnected()+"\n"+"wifiInfo:"+wifiInfo.isConnected()+"\n"+"activeInfo:"+activeInfo.getTypeName(), Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 }
